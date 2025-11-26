@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkyHorizon - Vietnam Drone Hub</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              drone: {
+                dark: '#0f172a',
+                light: '#1e293b',
+                accent: '#06b6d4', // Cyan
+                secondary: '#3b82f6', // Blue
+              }
+            },
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            }
+          }
+        }
+      }
+    </script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #0f172a;
+        color: #f1f5f9;
+      }
+      /* Custom scrollbar */
+      ::-webkit-scrollbar { width: 8px; }
+      ::-webkit-scrollbar-track { background: #1e293b; }
+      ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+      
+      .hidden-section { display: none; }
+      .active-nav { background-color: #1e293b; color: #06b6d4; }
+    </style>
+
+    <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/"
+  }
+}
+</script>
+  </head>
+  <body class="flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-drone-dark/90 backdrop-blur-md border-b border-gray-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          
+          <!-- Logo -->
+          <div class="flex items-center cursor-pointer" onclick="switchTab('home')">
+            <div class="w-8 h-8 bg-gradient-to-br from-drone-accent to-drone-secondary rounded-lg flex items-center justify-center mr-2">
+              <i data-lucide="plane" class="text-white w-5 h-5 transform -rotate-45"></i>
+            </div>
+            <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+              SkyHorizon
+            </span>
+          </div>
+
+          <!-- Desktop Menu -->
+          <div class="hidden md:block">
+            <div class="ml-10 flex items-baseline space-x-4">
+              <button onclick="switchTab('home')" id="nav-home" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 active-nav">
+                <i data-lucide="plane" class="w-4 h-4"></i> Trang chủ
+              </button>
+              <button onclick="showComingSoon()" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-drone-light transition-colors duration-200">
+                <i data-lucide="cpu" class="w-4 h-4"></i> Công nghệ
+              </button>
+              <button onclick="showComingSoon()" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-drone-light transition-colors duration-200">
+                <i data-lucide="book-open" class="w-4 h-4"></i> Hướng dẫn
+              </button>
+              <button onclick="switchTab('ai')" id="nav-ai" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-drone-accent border border-drone-accent/30 hover:bg-drone-accent/10 transition-colors duration-200">
+                <i data-lucide="sparkles" class="w-4 h-4"></i> Trợ lý AI
+              </button>
+            </div>
+          </div>
+
+          <!-- Mobile menu button -->
+          <div class="-mr-2 flex md:hidden">
+            <button onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+              <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden md:hidden bg-drone-dark border-b border-gray-800">
+         <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+            <button onclick="switchTab('home'); toggleMobileMenu()" class="w-full flex items-center gap-3 px-3 py-3 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700">Trang chủ</button>
+            <button onclick="switchTab('ai'); toggleMobileMenu()" class="w-full flex items-center gap-3 px-3 py-3 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700">Trợ lý AI</button>
+         </div>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow">
+      
+      <!-- VIEW: HOME -->
+      <div id="view-home">
+        <!-- Hero Section -->
+        <div class="relative overflow-hidden bg-drone-dark">
+          <div class="absolute inset-0 z-0 opacity-40">
+            <img src="https://picsum.photos/1920/1080?grayscale&blur=2" alt="Drone Background" class="w-full h-full object-cover"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-drone-dark via-drone-dark/80 to-transparent"></div>
+          </div>
+          <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+            <div class="lg:w-2/3">
+              <div class="inline-flex items-center px-3 py-1 rounded-full border border-drone-accent/30 bg-drone-accent/10 mb-6">
+                <span class="flex h-2 w-2 rounded-full bg-drone-accent mr-2 animate-pulse"></span>
+                <span class="text-drone-accent text-sm font-semibold tracking-wide uppercase">Công nghệ tương lai</span>
+              </div>
+              <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-white mb-6 leading-tight">
+                Khám phá thế giới từ <br/>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-drone-accent to-blue-500">Góc nhìn trên cao</span>
+              </h1>
+              <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl leading-relaxed">
+                Chuyên trang thông tin toàn diện về Drone tại Việt Nam. Từ kiến thức cơ bản cho người mới bắt đầu đến giải pháp công nghệ cao cho doanh nghiệp.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4">
+                <button onclick="document.getElementById('content-grid').scrollIntoView({behavior: 'smooth'})" class="px-8 py-4 bg-drone-accent hover:bg-cyan-600 text-white font-bold rounded-lg shadow-lg hover:shadow-cyan-500/30 transition-all flex items-center justify-center gap-2 group">
+                  Khám phá ngay <i data-lucide="chevron-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                </button>
+                <button onclick="switchTab('ai')" class="px-8 py-4 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg border border-gray-600 hover:border-gray-500 transition-all flex items-center justify-center gap-2">
+                  <i data-lucide="play-circle" class="w-5 h-5"></i> Hỏi chuyên gia AI
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div id="content-grid" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <!-- Categories -->
+          <div class="mb-16">
+            <h2 class="text-2xl font-bold text-white mb-8 flex items-center">
+              <span class="w-1 h-8 bg-drone-accent mr-3 rounded-full"></span>
+              Chuyên mục nổi bật
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+              <!-- Cat 1 -->
+              <div class="p-6 rounded-xl border bg-purple-500/10 border-purple-500/20 hover:bg-opacity-20 transition-all cursor-pointer group">
+                <div class="mb-4 p-3 bg-drone-dark/50 rounded-lg inline-block group-hover:scale-110 transition-transform">
+                  <i data-lucide="book" class="w-6 h-6 text-purple-400"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Nhập môn</h3>
+                <p class="text-sm text-gray-400">Kiến thức nền tảng cho người mới.</p>
+              </div>
+              <!-- Cat 2 -->
+              <div class="p-6 rounded-xl border bg-yellow-500/10 border-yellow-500/20 hover:bg-opacity-20 transition-all cursor-pointer group">
+                <div class="mb-4 p-3 bg-drone-dark/50 rounded-lg inline-block group-hover:scale-110 transition-transform">
+                  <i data-lucide="zap" class="w-6 h-6 text-yellow-400"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Review</h3>
+                <p class="text-sm text-gray-400">Đánh giá các mẫu flycam mới.</p>
+              </div>
+              <!-- Cat 3 -->
+              <div class="p-6 rounded-xl border bg-pink-500/10 border-pink-500/20 hover:bg-opacity-20 transition-all cursor-pointer group">
+                <div class="mb-4 p-3 bg-drone-dark/50 rounded-lg inline-block group-hover:scale-110 transition-transform">
+                  <i data-lucide="camera" class="w-6 h-6 text-pink-400"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Ứng dụng</h3>
+                <p class="text-sm text-gray-400">Nông nghiệp & Quay phim.</p>
+              </div>
+              <!-- Cat 4 -->
+              <div class="p-6 rounded-xl border bg-blue-500/10 border-blue-500/20 hover:bg-opacity-20 transition-all cursor-pointer group">
+                 <div class="mb-4 p-3 bg-drone-dark/50 rounded-lg inline-block group-hover:scale-110 transition-transform">
+                  <i data-lucide="wrench" class="w-6 h-6 text-blue-400"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Kỹ thuật</h3>
+                <p class="text-sm text-gray-400">Mẹo bay & Bảo dưỡng.</p>
+              </div>
+              <!-- Cat 5 -->
+              <div class="p-6 rounded-xl border bg-green-500/10 border-green-500/20 hover:bg-opacity-20 transition-all cursor-pointer group">
+                 <div class="mb-4 p-3 bg-drone-dark/50 rounded-lg inline-block group-hover:scale-110 transition-transform">
+                  <i data-lucide="shield" class="w-6 h-6 text-green-400"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Pháp luật</h3>
+                <p class="text-sm text-gray-400">Quy định & Vùng cấm bay.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Articles -->
+          <div>
+            <div class="flex justify-between items-end mb-8">
+              <h2 class="text-2xl font-bold text-white flex items-center">
+                <span class="w-1 h-8 bg-drone-accent mr-3 rounded-full"></span>
+                Bài viết mới nhất
+              </h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <!-- Article 1 -->
+              <div class="group bg-drone-light rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-drone-accent/10 transition-all border border-gray-800 hover:border-gray-700">
+                <div class="relative overflow-hidden h-64">
+                  <img src="https://picsum.photos/600/400?random=1" alt="Article 1" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"/>
+                  <div class="absolute top-4 left-4 bg-drone-dark/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-drone-accent uppercase border border-drone-accent/20">Review</div>
+                </div>
+                <div class="p-6">
+                  <div class="flex items-center text-xs text-gray-500 mb-3 space-x-2">
+                    <span>10 phút đọc</span><span>•</span><span>#Review</span><span>#Beginner</span>
+                  </div>
+                  <h3 class="text-xl font-bold text-white mb-3 group-hover:text-drone-accent transition-colors">Top 5 Flycam tốt nhất cho người mới bắt đầu 2024</h3>
+                  <p class="text-gray-400 mb-4 line-clamp-2">Đánh giá chi tiết DJI Mini 4 Pro, Air 3 và các lựa chọn giá rẻ khác phù hợp cho tập bay.</p>
+                </div>
+              </div>
+              <!-- Article 2 -->
+              <div class="group bg-drone-light rounded-2xl overflow-hidden hover:shadow-2xl hover:shadow-drone-accent/10 transition-all border border-gray-800 hover:border-gray-700">
+                <div class="relative overflow-hidden h-64">
+                  <img src="https://picsum.photos/600/400?random=2" alt="Article 2" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"/>
+                  <div class="absolute top-4 left-4 bg-drone-dark/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-drone-accent uppercase border border-drone-accent/20">Pháp luật</div>
+                </div>
+                <div class="p-6">
+                  <div class="flex items-center text-xs text-gray-500 mb-3 space-x-2">
+                    <span>15 phút đọc</span><span>•</span><span>#Legal</span><span>#Safety</span>
+                  </div>
+                  <h3 class="text-xl font-bold text-white mb-3 group-hover:text-drone-accent transition-colors">Hướng dẫn xin cấp phép bay Flycam tại Việt Nam</h3>
+                  <p class="text-gray-400 mb-4 line-clamp-2">Quy trình chi tiết, biểu mẫu cần thiết và địa chỉ nộp hồ sơ xin phép bay theo Nghị định 36/2008/NĐ-CP.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW: AI ASSISTANT (Hidden by default) -->
+      <div id="view-ai" class="hidden-section">
+        <div class="max-w-4xl mx-auto px-4 py-8 h-[calc(100vh-100px)] flex flex-col">
+          <div class="bg-drone-light rounded-2xl shadow-2xl border border-gray-700 flex flex-col overflow-hidden h-full">
+            
+            <!-- AI Header -->
+            <div class="p-4 bg-gray-800 border-b border-gray-700 flex justify-between items-center">
+              <div class="flex items-center gap-3">
+                <div class="p-2 bg-drone-accent/20 rounded-lg">
+                  <i data-lucide="bot" class="w-6 h-6 text-drone-accent"></i>
+                </div>
+                <div>
+                  <h3 class="text-white font-bold">SkyGuide AI</h3>
+                  <p class="text-xs text-green-400 flex items-center gap-1">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    Sẵn sàng hỗ trợ (Powered by Gemini 2.5)
+                  </p>
+                </div>
+              </div>
+              <div class="hidden md:flex items-center gap-2 text-xs text-gray-400 bg-gray-900 px-3 py-1 rounded-full border border-gray-700">
+                <i data-lucide="alert-triangle" class="w-3 h-3 text-yellow-500"></i>
+                Thông tin mang tính tham khảo
+              </div>
+            </div>
+
+            <!-- Chat Area -->
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-900/50">
+              <!-- Initial Message -->
+              <div class="flex items-start gap-3">
+                <div class="w-8 h-8 rounded-full bg-drone-accent flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+                </div>
+                <div class="bg-gray-800 text-gray-100 rounded-2xl px-4 py-3 border border-gray-700 rounded-tl-sm max-w-[80%]">
+                  <p>Chào bạn! Tôi là SkyGuide AI. Bạn cần tư vấn về loại drone nào, kỹ thuật bay, hay quy định pháp luật tại Việt Nam?</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading-indicator" class="hidden px-4 pb-2">
+                <div class="flex items-start gap-3">
+                    <div class="w-8 h-8 rounded-full bg-drone-accent flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="bot" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div class="bg-gray-800 rounded-2xl px-4 py-3 border border-gray-700 rounded-tl-sm">
+                      <div class="flex gap-1">
+                        <span class="w-2 h-2 bg-gray-500 rounded-full animate-bounce"></span>
+                        <span class="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-75"></span>
+                        <span class="w-2 h-2 bg-gray-500 rounded-full animate-bounce delay-150"></span>
+                      </div>
+                    </div>
+                 </div>
+            </div>
+
+            <!-- Suggestion Chips -->
+            <div id="suggestion-chips" class="px-4 py-2 bg-slate-900/50 flex gap-2 overflow-x-auto no-scrollbar">
+              <button onclick="setInput('Người mới nên mua flycam nào?')" class="whitespace-nowrap px-3 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-full text-xs text-gray-300 transition-colors">Người mới nên mua flycam nào?</button>
+              <button onclick="setInput('Thủ tục xin phép bay ở HN?')" class="whitespace-nowrap px-3 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-full text-xs text-gray-300 transition-colors">Thủ tục xin phép bay ở HN?</button>
+              <button onclick="setInput('Vùng cấm bay là gì?')" class="whitespace-nowrap px-3 py-1.5 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-full text-xs text-gray-300 transition-colors">Vùng cấm bay là gì?</button>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-4 bg-gray-800 border-t border-gray-700">
+              <div class="flex gap-2">
+                <input type="text" id="chat-input" placeholder="Nhập câu hỏi của bạn về Drone..." class="flex-1 bg-gray-900 text-white rounded-xl px-4 py-3 border border-gray-700 focus:outline-none focus:border-drone-accent focus:ring-1 focus:ring-drone-accent transition-all" />
+                <button id="send-btn" class="bg-drone-accent hover:bg-cyan-600 text-white rounded-xl px-4 flex items-center justify-center transition-colors">
+                  <i data-lucide="send" class="w-5 h-5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 pt-16 pb-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center mb-4 md:mb-0">
+               <div class="w-8 h-8 bg-gradient-to-br from-drone-accent to-drone-secondary rounded-lg flex items-center justify-center mr-2">
+                <i data-lucide="plane" class="text-white w-5 h-5 transform -rotate-45"></i>
+              </div>
+              <span class="text-xl font-bold text-white">SkyHorizon</span>
+            </div>
+            <p class="text-gray-500 text-sm">&copy; 2024 SkyHorizon Vietnam. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- LOGIC SCRIPT -->
+    <script type="module">
+      import { GoogleGenAI } from "@google/genai";
+
+      // --- Icons Init ---
+      lucide.createIcons();
+
+      // --- Navigation Logic ---
+      window.switchTab = function(tabId) {
+        // Update View
+        if (tabId === 'home') {
+            document.getElementById('view-home').classList.remove('hidden-section');
+            document.getElementById('view-ai').classList.add('hidden-section');
+            
+            // Update Nav State
+            document.getElementById('nav-home').classList.add('active-nav', 'bg-drone-light', 'text-drone-accent');
+            document.getElementById('nav-home').classList.remove('text-gray-300');
+            
+            document.getElementById('nav-ai').classList.remove('active-nav', 'bg-drone-accent/10');
+            document.getElementById('nav-ai').classList.add('text-drone-accent'); // Keep text color for AI button distinct
+        } else if (tabId === 'ai') {
+            document.getElementById('view-home').classList.add('hidden-section');
+            document.getElementById('view-ai').classList.remove('hidden-section');
+            
+            // Update Nav State
+            document.getElementById('nav-home').classList.remove('active-nav', 'bg-drone-light', 'text-drone-accent');
+            document.getElementById('nav-home').classList.add('text-gray-300');
+            
+            document.getElementById('nav-ai').classList.add('active-nav', 'bg-drone-accent/10');
+        }
+        window.scrollTo(0,0);
+      }
+
+      window.showComingSoon = function() {
+        alert("Tính năng đang được phát triển!");
+      }
+
+      window.toggleMobileMenu = function() {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+      }
+
+      window.setInput = function(text) {
+        document.getElementById('chat-input').value = text;
+        document.getElementById('chat-input').focus();
+      }
+
+      // --- AI Logic ---
+      const apiKey = process.env.API_KEY;
+      const ai = new GoogleGenAI({ apiKey: apiKey });
+      const chatContainer = document.getElementById('chat-messages');
+      const inputEl = document.getElementById('chat-input');
+      const sendBtn = document.getElementById('send-btn');
+      const loadingIndicator = document.getElementById('loading-indicator');
+      let isLoading = false;
+
+      async function handleSend() {
+        const text = inputEl.value.trim();
+        if (!text || isLoading) return;
+
+        // Add User Message
+        appendMessage('user', text);
+        inputEl.value = '';
+        isLoading = true;
+        loadingIndicator.classList.remove('hidden');
+        document.getElementById('suggestion-chips').style.display = 'none';
+
+        // Call Gemini
+        try {
+            const systemInstruction = `Bạn là 'SkyGuide AI', chuyên gia Drone tại Việt Nam trên SkyHorizon.
+            Kiến thức: Kỹ thuật drone, Hướng dẫn bay an toàn, Luật bay Việt Nam (Nghị định 36/2008), Mua sắm.
+            Phong cách: Thân thiện, ngắn gọn, dùng Markdown. Luôn nhắc về an toàn.`;
+
+            const response = await ai.models.generateContent({
+              model: 'gemini-2.5-flash',
+              contents: text,
+              config: { systemInstruction: systemInstruction }
+            });
+
+            const reply = response.text || "Xin lỗi, tôi không thể trả lời lúc này.";
+            appendMessage('model', reply);
+        } catch (error) {
+            console.error(error);
+            appendMessage('model', "Đã xảy ra lỗi kết nối. Vui lòng thử lại sau.");
+        } finally {
+            isLoading = false;
+            loadingIndicator.classList.add('hidden');
+        }
+      }
+
+      function appendMessage(role, text) {
+        const div = document.createElement('div');
+        div.className = `flex items-start gap-3 ${role === 'user' ? 'flex-row-reverse' : ''}`;
+        
+        const iconHtml = role === 'user' 
+            ? `<div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0"><i data-lucide="user" class="w-5 h-5 text-white"></i></div>`
+            : `<div class="w-8 h-8 rounded-full bg-drone-accent flex items-center justify-center flex-shrink-0"><i data-lucide="sparkles" class="w-5 h-5 text-white"></i></div>`;
+
+        const contentClass = role === 'user' 
+            ? 'bg-blue-600 text-white rounded-tr-sm' 
+            : 'bg-gray-800 text-gray-100 rounded-tl-sm border border-gray-700';
+
+        // Simple Markdown replacement for bold/lists if needed, here just basic text
+        // In a real app, use a markdown parser library. Here we just preserve whitespace.
+        
+        div.innerHTML = `
+            ${iconHtml}
+            <div class="max-w-[80%] rounded-2xl px-4 py-3 ${contentClass}">
+                <div class="prose prose-invert prose-sm whitespace-pre-wrap font-sans">${text}</div>
+            </div>
+        `;
+        
+        chatContainer.appendChild(div);
+        lucide.createIcons({ root: div }); // Re-init icons for new content
+        div.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      // Event Listeners
+      sendBtn.addEventListener('click', handleSend);
+      inputEl.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleSend();
+      });
+
+    </script>
+  </body>
+</html>
