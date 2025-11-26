@@ -47,6 +47,14 @@
       
       .hidden-section { display: none; }
       .active-nav { background-color: #1e293b; color: #06b6d4; }
+      
+      /* Partner Logo Grayscale to Color */
+      .partner-logo { filter: grayscale(100%); opacity: 0.6; transition: all 0.3s; }
+      .partner-logo:hover { filter: grayscale(0%); opacity: 1; transform: scale(1.05); }
+
+      /* Dropdown Menu Animation */
+      .group:hover .group-hover\:block { display: block; animation: fadeIn 0.2s ease-in-out; }
+      @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 
     <script type="importmap">
@@ -63,7 +71,7 @@
   <body class="flex flex-col min-h-screen">
 
     <!-- Navbar -->
-    <nav class="sticky top-0 z-50 bg-drone-dark/90 backdrop-blur-md border-b border-gray-800">
+    <nav class="sticky top-0 z-50 bg-drone-dark/95 backdrop-blur-md border-b border-gray-800">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
           
@@ -78,25 +86,63 @@
           </div>
 
           <!-- Desktop Menu -->
-          <div class="hidden md:block">
-            <div class="ml-10 flex items-baseline space-x-4">
-              <button onclick="switchTab('home')" id="nav-home" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 active-nav">
-                <i data-lucide="plane" class="w-4 h-4"></i> Trang chủ
+          <div class="hidden lg:flex items-center space-x-1">
+            
+            <!-- Giới thiệu -->
+            <button onclick="scrollToSection('about-section')" class="px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-drone-light rounded-md transition-colors">
+              Giới thiệu
+            </button>
+
+            <!-- Sản phẩm Dropdown -->
+            <div class="relative group">
+              <button class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-drone-light rounded-md transition-colors">
+                Sản phẩm <i data-lucide="chevron-down" class="w-4 h-4"></i>
               </button>
-              <button onclick="showComingSoon()" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-drone-light transition-colors duration-200">
-                <i data-lucide="cpu" class="w-4 h-4"></i> Công nghệ
+              <div class="absolute left-0 mt-0 w-48 bg-drone-light border border-gray-700 rounded-md shadow-lg hidden group-hover:block pt-2 z-50">
+                <a href="#" onclick="scrollToSection('products-section'); return false;" class="block px-4 py-2 text-sm text-gray-300 hover:bg-drone-accent hover:text-white">Drone</a>
+                <a href="#" onclick="scrollToSection('products-section'); return false;" class="block px-4 py-2 text-sm text-gray-300 hover:bg-drone-accent hover:text-white">Khung (Frame)</a>
+                <a href="#" onclick="scrollToSection('products-section'); return false;" class="block px-4 py-2 text-sm text-gray-300 hover:bg-drone-accent hover:text-white">Bộ điều khiển</a>
+                <a href="#" onclick="scrollToSection('products-section'); return false;" class="block px-4 py-2 text-sm text-gray-300 hover:bg-drone-accent hover:text-white rounded-b-md">Mạch điện tử</a>
+              </div>
+            </div>
+
+            <!-- Dự án -->
+            <button onclick="scrollToSection('projects-section')" class="px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-drone-light rounded-md transition-colors">
+              Dự án
+            </button>
+
+            <!-- Kiến thức Dropdown -->
+            <div class="relative group">
+              <button class="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-drone-light rounded-md transition-colors">
+                Kiến thức <i data-lucide="chevron-down" class="w-4 h-4"></i>
               </button>
-              <button onclick="showComingSoon()" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-gray-300 hover:text-white hover:bg-drone-light transition-colors duration-200">
-                <i data-lucide="book-open" class="w-4 h-4"></i> Hướng dẫn
-              </button>
-              <button onclick="switchTab('ai')" id="nav-ai" class="nav-btn flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium text-drone-accent border border-drone-accent/30 hover:bg-drone-accent/10 transition-colors duration-200">
+              <div class="absolute left-0 mt-0 w-56 bg-drone-light border border-gray-700 rounded-md shadow-lg hidden group-hover:block pt-2 z-50">
+                <a href="#" onclick="scrollToSection('knowledge-section'); return false;" class="block px-4 py-2 text-sm text-gray-300 hover:bg-drone-accent hover:text-white">Hướng dẫn sử dụng</a>
+                <a href="#" onclick="switchTab('ai'); return false;" class="block px-4 py-2 text-sm text-gray-300 hover:bg-drone-accent hover:text-white">Hỏi/Đáp (AI Support)</a>
+                <a href="#" onclick="scrollToSection('knowledge-section'); return false;" class="block px-4 py-2 text-sm text-gray-300 hover:bg-drone-accent hover:text-white">An toàn bay</a>
+                <a href="#" onclick="scrollToSection('knowledge-section'); return false;" class="block px-4 py-2 text-sm text-gray-300 hover:bg-drone-accent hover:text-white">Các lỗi thường gặp</a>
+                <a href="#" onclick="scrollToSection('knowledge-section'); return false;" class="block px-4 py-2 text-sm text-gray-300 hover:bg-drone-accent hover:text-white rounded-b-md">Tin công nghệ</a>
+              </div>
+            </div>
+
+            <!-- Đào tạo -->
+            <button onclick="scrollToSection('training-section')" class="px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-drone-light rounded-md transition-colors">
+              Đào tạo
+            </button>
+
+            <!-- Liên hệ -->
+            <button onclick="scrollToSection('contact-section')" class="px-3 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-drone-light rounded-md transition-colors">
+              Liên hệ
+            </button>
+
+             <!-- AI Button -->
+             <button onclick="switchTab('ai')" id="nav-ai" class="ml-4 nav-btn flex items-center gap-2 px-3 py-2 rounded-full text-sm font-bold text-white bg-gradient-to-r from-drone-accent to-blue-600 hover:shadow-lg hover:shadow-cyan-500/20 transition-all duration-200">
                 <i data-lucide="sparkles" class="w-4 h-4"></i> Trợ lý AI
               </button>
-            </div>
           </div>
 
           <!-- Mobile menu button -->
-          <div class="-mr-2 flex md:hidden">
+          <div class="-mr-2 flex lg:hidden">
             <button onclick="toggleMobileMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
               <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
@@ -105,10 +151,29 @@
       </div>
       
       <!-- Mobile Menu -->
-      <div id="mobile-menu" class="hidden md:hidden bg-drone-dark border-b border-gray-800">
+      <div id="mobile-menu" class="hidden lg:hidden bg-drone-dark border-b border-gray-800 overflow-y-auto max-h-[80vh]">
          <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            <button onclick="switchTab('home'); toggleMobileMenu()" class="w-full flex items-center gap-3 px-3 py-3 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700">Trang chủ</button>
-            <button onclick="switchTab('ai'); toggleMobileMenu()" class="w-full flex items-center gap-3 px-3 py-3 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700">Trợ lý AI</button>
+            <button onclick="scrollToSection('about-section'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700">Giới thiệu</button>
+            
+            <div class="px-3 py-2 text-gray-400 font-bold text-sm uppercase">Sản phẩm</div>
+            <div class="pl-6 space-y-1">
+                 <button onclick="scrollToSection('products-section'); toggleMobileMenu()" class="w-full text-left py-2 text-sm text-gray-300">Drone</button>
+                 <button onclick="scrollToSection('products-section'); toggleMobileMenu()" class="w-full text-left py-2 text-sm text-gray-300">Khung</button>
+                 <button onclick="scrollToSection('products-section'); toggleMobileMenu()" class="w-full text-left py-2 text-sm text-gray-300">Bộ điều khiển</button>
+                 <button onclick="scrollToSection('products-section'); toggleMobileMenu()" class="w-full text-left py-2 text-sm text-gray-300">Mạch</button>
+            </div>
+
+            <button onclick="scrollToSection('projects-section'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700">Dự án</button>
+            
+            <div class="px-3 py-2 text-gray-400 font-bold text-sm uppercase">Kiến thức</div>
+            <div class="pl-6 space-y-1">
+                 <button onclick="scrollToSection('knowledge-section'); toggleMobileMenu()" class="w-full text-left py-2 text-sm text-gray-300">Hướng dẫn sử dụng</button>
+                 <button onclick="switchTab('ai'); toggleMobileMenu()" class="w-full text-left py-2 text-sm text-gray-300">Hỏi/Đáp AI</button>
+                 <button onclick="scrollToSection('knowledge-section'); toggleMobileMenu()" class="w-full text-left py-2 text-sm text-gray-300">An toàn bay</button>
+            </div>
+
+            <button onclick="scrollToSection('training-section'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700">Đào tạo</button>
+            <button onclick="scrollToSection('contact-section'); toggleMobileMenu()" class="w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700">Liên hệ</button>
          </div>
       </div>
     </nav>
@@ -135,11 +200,11 @@
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-drone-accent to-blue-500">Góc nhìn trên cao</span>
               </h1>
               <p class="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl leading-relaxed">
-                Chuyên trang thông tin toàn diện về Drone tại Việt Nam. Từ kiến thức cơ bản cho người mới bắt đầu đến giải pháp công nghệ cao cho doanh nghiệp.
+                Chuyên trang thông tin toàn diện về Drone tại Việt Nam. Cung cấp thiết bị, giải pháp công nghệ và đào tạo chuyên nghiệp.
               </p>
               <div class="flex flex-col sm:flex-row gap-4">
-                <button onclick="document.getElementById('content-grid').scrollIntoView({behavior: 'smooth'})" class="px-8 py-4 bg-drone-accent hover:bg-cyan-600 text-white font-bold rounded-lg shadow-lg hover:shadow-cyan-500/30 transition-all flex items-center justify-center gap-2 group">
-                  Khám phá ngay <i data-lucide="chevron-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                <button onclick="scrollToSection('products-section')" class="px-8 py-4 bg-drone-accent hover:bg-cyan-600 text-white font-bold rounded-lg shadow-lg hover:shadow-cyan-500/30 transition-all flex items-center justify-center gap-2 group">
+                  Xem sản phẩm <i data-lucide="chevron-right" class="w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
                 </button>
                 <button onclick="switchTab('ai')" class="px-8 py-4 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg border border-gray-600 hover:border-gray-500 transition-all flex items-center justify-center gap-2">
                   <i data-lucide="play-circle" class="w-5 h-5"></i> Hỏi chuyên gia AI
@@ -148,65 +213,163 @@
             </div>
           </div>
         </div>
+        
+        <!-- ABOUT SECTION (Simple Intro) -->
+        <div id="about-section" class="bg-drone-dark py-12 border-b border-gray-800">
+             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                 <h2 class="text-3xl font-bold text-white mb-4">Về SkyHorizon</h2>
+                 <p class="text-gray-400 max-w-3xl mx-auto leading-relaxed">
+                     Chúng tôi là đơn vị tiên phong trong lĩnh vực cung cấp giải pháp máy bay không người lái (Drone/UAV) tại Việt Nam. 
+                     Với sứ mệnh mang công nghệ cao đến gần hơn với đời sống, SkyHorizon cung cấp các sản phẩm chính hãng, 
+                     dịch vụ đào tạo bay chuyên nghiệp và tư vấn giải pháp ứng dụng cho doanh nghiệp.
+                 </p>
+             </div>
+        </div>
 
-        <!-- Content Grid -->
-        <div id="content-grid" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <!-- Categories -->
-          <div class="mb-16">
-            <h2 class="text-2xl font-bold text-white mb-8 flex items-center">
-              <span class="w-1 h-8 bg-drone-accent mr-3 rounded-full"></span>
-              Chuyên mục nổi bật
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-              <!-- Cat 1 -->
-              <div class="p-6 rounded-xl border bg-purple-500/10 border-purple-500/20 hover:bg-opacity-20 transition-all cursor-pointer group">
-                <div class="mb-4 p-3 bg-drone-dark/50 rounded-lg inline-block group-hover:scale-110 transition-transform">
-                  <i data-lucide="book" class="w-6 h-6 text-purple-400"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-white mb-2">Nhập môn</h3>
-                <p class="text-sm text-gray-400">Kiến thức nền tảng cho người mới.</p>
+        <!-- PRODUCTS SECTION (NEW) -->
+        <div id="products-section" class="bg-gray-900 py-16">
+           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="flex justify-between items-end mb-8">
+                  <h2 class="text-2xl font-bold text-white flex items-center">
+                    <span class="w-1 h-8 bg-drone-accent mr-3 rounded-full"></span>
+                    Sản phẩm nổi bật
+                  </h2>
+                  <a href="#" class="text-drone-accent hover:text-white transition-colors text-sm font-medium flex items-center">Xem tất cả <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i></a>
               </div>
-              <!-- Cat 2 -->
-              <div class="p-6 rounded-xl border bg-yellow-500/10 border-yellow-500/20 hover:bg-opacity-20 transition-all cursor-pointer group">
-                <div class="mb-4 p-3 bg-drone-dark/50 rounded-lg inline-block group-hover:scale-110 transition-transform">
-                  <i data-lucide="zap" class="w-6 h-6 text-yellow-400"></i>
-                </div>
-                <h3 class="text-lg font-semibold text-white mb-2">Review</h3>
-                <p class="text-sm text-gray-400">Đánh giá các mẫu flycam mới.</p>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <!-- Product 1 -->
+                  <div class="bg-drone-light rounded-xl overflow-hidden border border-gray-800 group hover:border-drone-accent/50 transition-all">
+                      <div class="relative h-48 bg-white p-4 flex items-center justify-center">
+                          <img src="https://picsum.photos/400/400?random=10" alt="DJI Mini 4 Pro" class="max-h-full object-contain mix-blend-multiply transition-transform group-hover:scale-110"/>
+                          <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">HOT</div>
+                      </div>
+                      <div class="p-4">
+                          <div class="text-xs text-gray-500 mb-1">Drone</div>
+                          <h3 class="text-lg font-bold text-white mb-2 truncate">DJI Mini 4 Pro Combo</h3>
+                          <div class="flex items-center justify-between">
+                              <span class="text-drone-accent font-bold">18.590.000₫</span>
+                              <button class="p-2 bg-gray-800 hover:bg-drone-accent rounded-lg text-white transition-colors"><i data-lucide="shopping-cart" class="w-4 h-4"></i></button>
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- Product 2 -->
+                  <div class="bg-drone-light rounded-xl overflow-hidden border border-gray-800 group hover:border-drone-accent/50 transition-all">
+                      <div class="relative h-48 bg-white p-4 flex items-center justify-center">
+                          <img src="https://picsum.photos/400/400?random=11" alt="FPV Frame 5 inch" class="max-h-full object-contain mix-blend-multiply transition-transform group-hover:scale-110"/>
+                      </div>
+                      <div class="p-4">
+                          <div class="text-xs text-gray-500 mb-1">Khung (Frame)</div>
+                          <h3 class="text-lg font-bold text-white mb-2 truncate">Mark4 5-inch Carbon</h3>
+                          <div class="flex items-center justify-between">
+                              <span class="text-drone-accent font-bold">850.000₫</span>
+                              <button class="p-2 bg-gray-800 hover:bg-drone-accent rounded-lg text-white transition-colors"><i data-lucide="shopping-cart" class="w-4 h-4"></i></button>
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- Product 3 -->
+                  <div class="bg-drone-light rounded-xl overflow-hidden border border-gray-800 group hover:border-drone-accent/50 transition-all">
+                      <div class="relative h-48 bg-white p-4 flex items-center justify-center">
+                          <img src="https://picsum.photos/400/400?random=12" alt="Flight Controller" class="max-h-full object-contain mix-blend-multiply transition-transform group-hover:scale-110"/>
+                      </div>
+                      <div class="p-4">
+                          <div class="text-xs text-gray-500 mb-1">Bộ điều khiển</div>
+                          <h3 class="text-lg font-bold text-white mb-2 truncate">SpeedyBee F405 V3</h3>
+                          <div class="flex items-center justify-between">
+                              <span class="text-drone-accent font-bold">1.250.000₫</span>
+                              <button class="p-2 bg-gray-800 hover:bg-drone-accent rounded-lg text-white transition-colors"><i data-lucide="shopping-cart" class="w-4 h-4"></i></button>
+                          </div>
+                      </div>
+                  </div>
+
+                  <!-- Product 4 -->
+                  <div class="bg-drone-light rounded-xl overflow-hidden border border-gray-800 group hover:border-drone-accent/50 transition-all">
+                      <div class="relative h-48 bg-white p-4 flex items-center justify-center">
+                          <img src="https://picsum.photos/400/400?random=13" alt="DJI Air 3" class="max-h-full object-contain mix-blend-multiply transition-transform group-hover:scale-110"/>
+                      </div>
+                      <div class="p-4">
+                          <div class="text-xs text-gray-500 mb-1">Drone</div>
+                          <h3 class="text-lg font-bold text-white mb-2 truncate">DJI Air 3 Fly More</h3>
+                          <div class="flex items-center justify-between">
+                              <span class="text-drone-accent font-bold">29.990.000₫</span>
+                              <button class="p-2 bg-gray-800 hover:bg-drone-accent rounded-lg text-white transition-colors"><i data-lucide="shopping-cart" class="w-4 h-4"></i></button>
+                          </div>
+                      </div>
+                  </div>
               </div>
-              <!-- Cat 3 -->
-              <div class="p-6 rounded-xl border bg-pink-500/10 border-pink-500/20 hover:bg-opacity-20 transition-all cursor-pointer group">
-                <div class="mb-4 p-3 bg-drone-dark/50 rounded-lg inline-block group-hover:scale-110 transition-transform">
-                  <i data-lucide="camera" class="w-6 h-6 text-pink-400"></i>
+           </div>
+        </div>
+
+        <!-- PROJECTS SECTION (Existing but moved) -->
+        <div id="projects-section" class="bg-drone-dark py-16 border-t border-gray-800">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+             <div class="flex justify-between items-end mb-8">
+              <h2 class="text-2xl font-bold text-white flex items-center">
+                <span class="w-1 h-8 bg-blue-500 mr-3 rounded-full"></span>
+                Dự án đã thực hiện
+              </h2>
+              <button class="hidden md:flex items-center text-blue-400 hover:text-blue-300 transition-colors text-sm font-medium">
+                Xem tất cả dự án <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
+              </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Project 1 -->
+              <div class="group rounded-xl overflow-hidden bg-drone-light border border-gray-800 hover:border-blue-500/50 transition-all">
+                <div class="relative h-48 overflow-hidden">
+                   <img src="https://picsum.photos/600/400?random=3" alt="Project 1" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"/>
+                   <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-80"></div>
+                   <div class="absolute bottom-4 left-4">
+                     <span class="text-xs font-semibold text-blue-400 bg-blue-900/30 px-2 py-1 rounded border border-blue-500/30">Nông nghiệp</span>
+                   </div>
                 </div>
-                <h3 class="text-lg font-semibold text-white mb-2">Ứng dụng</h3>
-                <p class="text-sm text-gray-400">Nông nghiệp & Quay phim.</p>
+                <div class="p-5">
+                  <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Phun thuốc tự động Đồng Tháp</h3>
+                  <p class="text-sm text-gray-400 line-clamp-2">Triển khai đội bay DJI Agras T40 cho 500ha lúa, tăng hiệu suất 200% so với phương pháp truyền thống.</p>
+                </div>
               </div>
-              <!-- Cat 4 -->
-              <div class="p-6 rounded-xl border bg-blue-500/10 border-blue-500/20 hover:bg-opacity-20 transition-all cursor-pointer group">
-                 <div class="mb-4 p-3 bg-drone-dark/50 rounded-lg inline-block group-hover:scale-110 transition-transform">
-                  <i data-lucide="wrench" class="w-6 h-6 text-blue-400"></i>
+
+              <!-- Project 2 -->
+              <div class="group rounded-xl overflow-hidden bg-drone-light border border-gray-800 hover:border-blue-500/50 transition-all">
+                <div class="relative h-48 overflow-hidden">
+                   <img src="https://picsum.photos/600/400?random=4" alt="Project 2" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"/>
+                   <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-80"></div>
+                   <div class="absolute bottom-4 left-4">
+                     <span class="text-xs font-semibold text-purple-400 bg-purple-900/30 px-2 py-1 rounded border border-purple-500/30">Sự kiện</span>
+                   </div>
                 </div>
-                <h3 class="text-lg font-semibold text-white mb-2">Kỹ thuật</h3>
-                <p class="text-sm text-gray-400">Mẹo bay & Bảo dưỡng.</p>
+                <div class="p-5">
+                  <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Drone Light Show Hạ Long</h3>
+                  <p class="text-sm text-gray-400 line-clamp-2">Biểu diễn nghệ thuật ánh sáng với 200 drone, tạo hình rồng bay chào mừng lễ hội du lịch biển.</p>
+                </div>
               </div>
-              <!-- Cat 5 -->
-              <div class="p-6 rounded-xl border bg-green-500/10 border-green-500/20 hover:bg-opacity-20 transition-all cursor-pointer group">
-                 <div class="mb-4 p-3 bg-drone-dark/50 rounded-lg inline-block group-hover:scale-110 transition-transform">
-                  <i data-lucide="shield" class="w-6 h-6 text-green-400"></i>
+
+              <!-- Project 3 -->
+              <div class="group rounded-xl overflow-hidden bg-drone-light border border-gray-800 hover:border-blue-500/50 transition-all">
+                <div class="relative h-48 overflow-hidden">
+                   <img src="https://picsum.photos/600/400?random=5" alt="Project 3" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"/>
+                   <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-80"></div>
+                   <div class="absolute bottom-4 left-4">
+                     <span class="text-xs font-semibold text-green-400 bg-green-900/30 px-2 py-1 rounded border border-green-500/30">Khảo sát</span>
+                   </div>
                 </div>
-                <h3 class="text-lg font-semibold text-white mb-2">Pháp luật</h3>
-                <p class="text-sm text-gray-400">Quy định & Vùng cấm bay.</p>
+                <div class="p-5">
+                  <h3 class="text-lg font-bold text-white mb-2 group-hover:text-blue-400 transition-colors">Bản đồ số 3D KCN Bắc Ninh</h3>
+                  <p class="text-sm text-gray-400 line-clamp-2">Sử dụng công nghệ Photogrammetry và Lidar để dựng mô hình 3D chính xác phục vụ quy hoạch.</p>
+                </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Articles -->
-          <div>
-            <div class="flex justify-between items-end mb-8">
+        <!-- KNOWLEDGE SECTION (Renamed from News Grid) -->
+        <div id="knowledge-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-gray-900">
+          <div class="flex justify-between items-end mb-8">
               <h2 class="text-2xl font-bold text-white flex items-center">
-                <span class="w-1 h-8 bg-drone-accent mr-3 rounded-full"></span>
-                Bài viết mới nhất
+                <span class="w-1 h-8 bg-green-500 mr-3 rounded-full"></span>
+                Kiến thức & Hướng dẫn
               </h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -239,8 +402,125 @@
                 </div>
               </div>
             </div>
+        </div>
+
+        <!-- TRAINING SECTION (NEW) -->
+        <div id="training-section" class="bg-drone-dark py-16 border-t border-gray-800">
+           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <h2 class="text-2xl font-bold text-white flex items-center mb-8">
+                <span class="w-1 h-8 bg-orange-500 mr-3 rounded-full"></span>
+                Khóa đào tạo & Huấn luyện
+              </h2>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <!-- Course 1 -->
+                  <div class="flex flex-col md:flex-row bg-drone-light rounded-xl overflow-hidden border border-gray-700 hover:border-orange-500/50 transition-all">
+                      <div class="md:w-2/5 relative h-48 md:h-auto">
+                           <img src="https://picsum.photos/400/600?random=20" alt="Training 1" class="w-full h-full object-cover"/>
+                           <div class="absolute top-2 left-2 bg-orange-600 text-white text-xs font-bold px-2 py-1 rounded">HOT</div>
+                      </div>
+                      <div class="p-6 md:w-3/5 flex flex-col justify-center">
+                           <h3 class="text-xl font-bold text-white mb-2">Khóa đào tạo, huấn luyện bay tháng 10</h3>
+                           <p class="text-sm text-gray-400 mb-4">Khóa học cấp tốc 3 ngày dành cho người mới bắt đầu. Nắm vững kỹ thuật bay an toàn, xử lý tình huống khẩn cấp và quay phim cơ bản.</p>
+                           <div class="flex items-center gap-4 text-xs text-gray-500 mb-4">
+                               <span class="flex items-center"><i data-lucide="calendar" class="w-3 h-3 mr-1"></i> 15/10/2024</span>
+                               <span class="flex items-center"><i data-lucide="map-pin" class="w-3 h-3 mr-1"></i> Hà Nội</span>
+                           </div>
+                           <button class="w-full py-2 bg-gray-700 hover:bg-orange-600 text-white rounded font-medium transition-colors">Đăng ký ngay</button>
+                      </div>
+                  </div>
+
+                  <!-- Course 2 -->
+                  <div class="flex flex-col md:flex-row bg-drone-light rounded-xl overflow-hidden border border-gray-700 hover:border-orange-500/50 transition-all">
+                      <div class="md:w-2/5 relative h-48 md:h-auto">
+                           <img src="https://picsum.photos/400/600?random=21" alt="Training 2" class="w-full h-full object-cover"/>
+                      </div>
+                      <div class="p-6 md:w-3/5 flex flex-col justify-center">
+                           <h3 class="text-xl font-bold text-white mb-2">Khóa đào tạo bay tháng 11/2025</h3>
+                           <p class="text-sm text-gray-400 mb-4">Chương trình nâng cao: Bay khảo sát, lập bản đồ 3D và cấp chứng chỉ vận hành thiết bị bay không người lái chuyên nghiệp.</p>
+                           <div class="flex items-center gap-4 text-xs text-gray-500 mb-4">
+                               <span class="flex items-center"><i data-lucide="calendar" class="w-3 h-3 mr-1"></i> 05/11/2025</span>
+                               <span class="flex items-center"><i data-lucide="map-pin" class="w-3 h-3 mr-1"></i> TP.HCM</span>
+                           </div>
+                           <button class="w-full py-2 bg-gray-700 hover:bg-orange-600 text-white rounded font-medium transition-colors">Đăng ký ngay</button>
+                      </div>
+                  </div>
+              </div>
+           </div>
+        </div>
+
+        <!-- CONTACT SECTION (NEW FORM) -->
+        <div id="contact-section" class="bg-gray-900 py-16">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                 <div class="bg-drone-light p-8 rounded-2xl border border-gray-800 shadow-xl">
+                     <h2 class="text-2xl font-bold text-white text-center mb-2">Liên hệ tư vấn</h2>
+                     <p class="text-center text-gray-400 mb-8 text-sm">Để lại thông tin, chúng tôi sẽ gọi lại cho bạn trong vòng 24h.</p>
+                     
+                     <form onsubmit="event.preventDefault(); alert('Cảm ơn! Chúng tôi đã nhận được thông tin của bạn.');" class="space-y-6">
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                             <div>
+                                 <label class="block text-xs font-medium text-gray-400 mb-2">Họ và tên</label>
+                                 <input type="text" placeholder="Nguyễn Văn A" required class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-drone-accent"/>
+                             </div>
+                             <div>
+                                 <label class="block text-xs font-medium text-gray-400 mb-2">Số điện thoại</label>
+                                 <input type="tel" placeholder="09xxxxxxx" required class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-drone-accent"/>
+                             </div>
+                         </div>
+                         <div>
+                             <label class="block text-xs font-medium text-gray-400 mb-2">Email</label>
+                             <input type="email" placeholder="email@example.com" class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-drone-accent"/>
+                         </div>
+                         <div>
+                             <label class="block text-xs font-medium text-gray-400 mb-2">Nội dung cần hỗ trợ</label>
+                             <textarea rows="4" placeholder="Tôi quan tâm đến khóa học bay..." class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-drone-accent"></textarea>
+                         </div>
+                         <button type="submit" class="w-full bg-drone-accent hover:bg-cyan-600 text-white font-bold py-4 rounded-lg transition-all shadow-lg hover:shadow-cyan-500/20 flex items-center justify-center gap-2">
+                             <i data-lucide="send" class="w-5 h-5"></i> Gửi đi
+                         </button>
+                     </form>
+                 </div>
+            </div>
+        </div>
+
+        <!-- PARTNERS SECTION -->
+        <div class="bg-drone-dark py-16 border-t border-gray-800">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-2xl font-bold text-white mb-2">Đối tác & Khách hàng</h2>
+            <p class="text-gray-400 mb-10 text-sm">Đồng hành cùng sự phát triển của công nghệ Drone tại Việt Nam</p>
+            
+            <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16">
+              <div class="partner-logo flex items-center gap-2 group cursor-pointer">
+                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                  <i data-lucide="aperture" class="text-white w-6 h-6"></i>
+                </div>
+                <span class="text-xl font-bold text-white tracking-wider">DJI Enterprise</span>
+              </div>
+              
+              <div class="partner-logo flex items-center gap-2 group cursor-pointer">
+                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                   <i data-lucide="box" class="text-white w-6 h-6"></i>
+                </div>
+                <span class="text-xl font-bold text-white tracking-wider">AgriDrone</span>
+              </div>
+
+              <div class="partner-logo flex items-center gap-2 group cursor-pointer">
+                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                   <i data-lucide="globe" class="text-white w-6 h-6"></i>
+                </div>
+                <span class="text-xl font-bold text-white tracking-wider">VienTham.VN</span>
+              </div>
+
+              <div class="partner-logo flex items-center gap-2 group cursor-pointer">
+                <div class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center">
+                   <i data-lucide="cpu" class="text-white w-6 h-6"></i>
+                </div>
+                <span class="text-xl font-bold text-white tracking-wider">TechHub</span>
+              </div>
+            </div>
           </div>
         </div>
+
       </div>
 
       <!-- VIEW: AI ASSISTANT (Hidden by default) -->
@@ -321,14 +601,68 @@
     <!-- Footer -->
     <footer class="bg-gray-900 border-t border-gray-800 pt-16 pb-8">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row justify-between items-center">
-            <div class="flex items-center mb-4 md:mb-0">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+          
+          <!-- Brand -->
+          <div class="space-y-4">
+            <div class="flex items-center">
                <div class="w-8 h-8 bg-gradient-to-br from-drone-accent to-drone-secondary rounded-lg flex items-center justify-center mr-2">
                 <i data-lucide="plane" class="text-white w-5 h-5 transform -rotate-45"></i>
               </div>
               <span class="text-xl font-bold text-white">SkyHorizon</span>
             </div>
-            <p class="text-gray-500 text-sm">&copy; 2024 SkyHorizon Vietnam. All rights reserved.</p>
+            <p class="text-gray-400 text-sm leading-relaxed">
+              Kết nối cộng đồng đam mê máy bay không người lái. Nơi chia sẻ kiến thức, kinh nghiệm và công nghệ mới nhất.
+            </p>
+            <div class="flex space-x-4">
+              <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-lucide="facebook" class="w-5 h-5"></i></a>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+              <a href="#" class="text-gray-400 hover:text-white transition-colors"><i data-lucide="youtube" class="w-5 h-5"></i></a>
+            </div>
+          </div>
+
+          <!-- Links -->
+          <div>
+            <h3 class="text-white font-semibold mb-4">Sản phẩm</h3>
+            <ul class="space-y-2 text-sm text-gray-400">
+              <li><a href="#" class="hover:text-drone-accent transition-colors">Drone quay phim</a></li>
+              <li><a href="#" class="hover:text-drone-accent transition-colors">Drone nông nghiệp</a></li>
+              <li><a href="#" class="hover:text-drone-accent transition-colors">Linh kiện FPV</a></li>
+              <li><a href="#" class="hover:text-drone-accent transition-colors">Dịch vụ sửa chữa</a></li>
+            </ul>
+          </div>
+
+          <!-- Support -->
+          <div>
+            <h3 class="text-white font-semibold mb-4">Hỗ trợ</h3>
+            <ul class="space-y-2 text-sm text-gray-400">
+              <li><a href="#" class="hover:text-drone-accent transition-colors">Trung tâm trợ giúp</a></li>
+              <li><a href="#" class="hover:text-drone-accent transition-colors">Quy định bay</a></li>
+              <li><a href="#" class="hover:text-drone-accent transition-colors">Chính sách bảo hành</a></li>
+              <li><a href="#" class="hover:text-drone-accent transition-colors">Liên hệ</a></li>
+            </ul>
+          </div>
+
+          <!-- Newsletter -->
+          <div>
+            <h3 class="text-white font-semibold mb-4">Đăng ký nhận tin</h3>
+            <p className="text-xs text-gray-400 mb-4">Nhận những bài đánh giá và lịch đào tạo mới nhất vào hộp thư của bạn.</p>
+            <form class="flex flex-col gap-2" onsubmit="event.preventDefault(); alert('Cảm ơn bạn đã đăng ký!');">
+              <input 
+                type="email" 
+                placeholder="Email của bạn" 
+                class="bg-gray-800 border border-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-drone-accent text-sm"
+              />
+              <button class="bg-drone-accent hover:bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2">
+                <i data-lucide="mail" class="w-4 h-4"></i>
+                Đăng ký
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+          <p>&copy; 2024 Bản quyền thuộc về TN.</p>
         </div>
       </div>
     </footer>
@@ -347,23 +681,34 @@
             document.getElementById('view-home').classList.remove('hidden-section');
             document.getElementById('view-ai').classList.add('hidden-section');
             
-            // Update Nav State
-            document.getElementById('nav-home').classList.add('active-nav', 'bg-drone-light', 'text-drone-accent');
-            document.getElementById('nav-home').classList.remove('text-gray-300');
+            // AI Nav Button State
+            document.getElementById('nav-ai').classList.remove('shadow-cyan-500/50', 'ring-2', 'ring-cyan-500');
             
-            document.getElementById('nav-ai').classList.remove('active-nav', 'bg-drone-accent/10');
-            document.getElementById('nav-ai').classList.add('text-drone-accent'); // Keep text color for AI button distinct
+            window.scrollTo(0,0);
         } else if (tabId === 'ai') {
             document.getElementById('view-home').classList.add('hidden-section');
             document.getElementById('view-ai').classList.remove('hidden-section');
             
-            // Update Nav State
-            document.getElementById('nav-home').classList.remove('active-nav', 'bg-drone-light', 'text-drone-accent');
-            document.getElementById('nav-home').classList.add('text-gray-300');
+             // AI Nav Button State
+            document.getElementById('nav-ai').classList.add('shadow-cyan-500/50', 'ring-2', 'ring-cyan-500');
             
-            document.getElementById('nav-ai').classList.add('active-nav', 'bg-drone-accent/10');
+            window.scrollTo(0,0);
         }
-        window.scrollTo(0,0);
+      }
+
+      window.scrollToSection = function(sectionId) {
+        // Ensure home view is active first
+        if(document.getElementById('view-home').classList.contains('hidden-section')) {
+            switchTab('home');
+            // Allow time for DOM update/reflow
+            setTimeout(() => {
+                const el = document.getElementById(sectionId);
+                if(el) el.scrollIntoView({behavior: 'smooth'});
+            }, 50);
+        } else {
+            const el = document.getElementById(sectionId);
+            if(el) el.scrollIntoView({behavior: 'smooth'});
+        }
       }
 
       window.showComingSoon = function() {
@@ -434,9 +779,6 @@
         const contentClass = role === 'user' 
             ? 'bg-blue-600 text-white rounded-tr-sm' 
             : 'bg-gray-800 text-gray-100 rounded-tl-sm border border-gray-700';
-
-        // Simple Markdown replacement for bold/lists if needed, here just basic text
-        // In a real app, use a markdown parser library. Here we just preserve whitespace.
         
         div.innerHTML = `
             ${iconHtml}
@@ -446,7 +788,7 @@
         `;
         
         chatContainer.appendChild(div);
-        lucide.createIcons({ root: div }); // Re-init icons for new content
+        lucide.createIcons({ root: div }); 
         div.scrollIntoView({ behavior: 'smooth' });
       }
 
